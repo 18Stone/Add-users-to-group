@@ -1,0 +1,30 @@
+#
+# Author: J.C. Geribon
+# Add hundreds of users to a security group.
+# This script will accept parameters of a full UNC path. 
+# A CSV containing usernames will be required with the word 'Users' at the top of the list.
+# I recommend running locally, not from share.
+#
+
+Import-module ActiveDirectory
+
+# Enter admin credentials here
+
+$cred = Get-Credential
+
+# Enter desired security group to populate with list of users.
+
+$SecGroup = Read-Host -Prompt 'Enter Security Group'
+
+# Import list of users you desire to add to security group.
+ 
+Import-Csv "[Path to CSV containing user names]" | % { 
+Add-ADGroupMember -Credential $cred -Identity $SecGroup -Members $_.Users 
+} 
+
+
+# (Optional) Use the following to log when the script was last ran. Logs Date, username, and users added.
+#$A = Get-Date; 
+#$B = [Environment]::UserName
+#$C = Import-CSV "[Path to list of users]"
+#Add-Content "[Path to store logs]" "$C added to $SecGroup on $A by $B."
